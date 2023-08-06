@@ -1,5 +1,6 @@
 import createError,{HttpError} from 'http-errors';
 import { config } from 'dotenv';
+import sequelize from './config/db.config';
 import express, {Request, Response, NextFunction} from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
@@ -13,6 +14,15 @@ import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 
 const app = express();
+
+sequelize.sync()
+.then(()=>{
+  console.log('db synched')
+})
+.catch((err)=>{
+  console.error(err)
+  console.error('sync failed')
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, '..','views'));
