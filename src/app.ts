@@ -12,6 +12,7 @@ console.log(process.env.NODE_ENV)
 
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
+import adminRouter from './routes/admin';
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use(express.static(path.join(__dirname, '..','public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req:Request, res: Response, next: NextFunction) {
