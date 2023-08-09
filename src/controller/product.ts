@@ -33,12 +33,7 @@ const control = {
             //respond on successful product creation
             res.status(201).render('admin_success',{
                 message: 'new product added',
-                data: {
-                    name: name,
-                    price: price,
-                    quantity: quantity,
-                    category: category
-                }
+                data: `name: ${name}, price: ${price}, quantity: ${quantity}`
             })
 
 
@@ -169,7 +164,7 @@ const control = {
             //respond with new data
             res.render('admin_success',{
                 message: 'new stock added',
-                data: prod
+                data: `name: ${name}, quantity: ${newStock}`
             })
 
         }
