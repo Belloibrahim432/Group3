@@ -58,8 +58,9 @@ const control = {
                 next()
                 return
             }
-            res.status(400).json({
-                error: 'Invalid credentials'
+            res.status(400).render('bad_login', {
+                message: 'Invalid credentials',
+                data: ''
             })
         }
         catch(err){
@@ -92,7 +93,7 @@ const control = {
         
         try{
             const hash = bcrypt.hashSync(password, salt)
-            await Personnel.create({
+            const personnel = await Personnel.create({
                 id,
                 name,
                 email,
@@ -100,6 +101,27 @@ const control = {
                 admin: false,
                 endorsed: false,
             })
+
+                 //generate a token on successful credentials
+                 const token = jwt.sign(
+                    {
+                        userid: personnel.dataValues.id,
+                        endorsed: personnel.dataValues.endorsed,
+                        admin: personnel.dataValues.admin
+                    },
+                    process.env.JWT_SECRET!,
+                    {expiresIn: "1h"}
+                )
+    
+                //to be removed, token is sensitive info
+                console.log(token)
+    
+                res.cookie('token', token, { httpOnly: true, maxAge: 3600000 })
+    
+                //attach token to req headers and pass to next
+                req.headers = {...req.headers, authorization:`Bearer ${token}`}
+
+
             next()
             return
         }
@@ -134,8 +156,9 @@ const control = {
                 where: {email}
             })
             if(!user){
-                return res.json({
-                    error: "User not found"
+                return res.render('admin_error',{
+                    message: "User not found",
+                    data: ''
                 })
             }
     

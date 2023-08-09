@@ -134,4 +134,7 @@ input :focus{
 .extend{
     width: 160px;
 }
+.error{
+    color: #cf2b2b;
+  }
 

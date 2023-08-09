@@ -33,7 +33,12 @@ const control = {
             //respond on successful product creation
             res.status(201).render('admin_success',{
                 message: 'new product added',
-                data: `product name: ${name}\nprice: ${price}\nquantity: ${quantity}`
+                data: {
+                    name: name,
+                    price: price,
+                    quantity: quantity,
+                    category: category
+                }
             })
 
 
@@ -63,8 +68,9 @@ const control = {
             }
 
             //respond if no products are in the database
-            res.json({
-                message: 'No products available'
+            res.render('admin_error',{
+                message: 'No products available',
+                data: ''
             })
         }
         catch(err){
@@ -91,8 +97,9 @@ const control = {
             }
 
             //respond if no products are in the database
-            res.json({
-                message: 'No products available'
+            res.render('sale_error',{
+                message: 'No products available',
+                data: ''
             })
         }
         catch(err){
@@ -149,8 +156,9 @@ const control = {
 
             //return error if product not found
             if(!prod){
-                return res.json({
-                    message: 'No matching product'
+                return res.render('admin_error', {
+                    message: 'No matching product',
+                    data: ''
                 })
             }
 
@@ -161,7 +169,7 @@ const control = {
             //respond with new data
             res.render('admin_success',{
                 message: 'new stock added',
-                data: `product name: ${name}\n\rquantity: ${newStock}`
+                data: prod
             })
 
         }
@@ -189,16 +197,17 @@ const control = {
 
             //return error if product is not found
             if(!prod){
-                return res.json({
-                    message: 'No matching product'
+                return res.render('sale_error',{
+                    message: 'No matching product',
+                    data: ''
                 })
             }
 
             //return error if the sale quantity is more than stock
             if(Number(quantity) > Number(prod.dataValues.quantity)){
-                return res.json({
+                return res.render('sale_error',{
                     message: 'Stock insufficient',
-                    stock: prod.dataValues.quantity
+                    data: `only ${prod.dataValues.quantity} available`
                 })
             }
 

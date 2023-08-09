@@ -38,8 +38,9 @@ const auth = {
 
             //return error if user not found
             if(!personnel){
-                return res.status(403).json({
-                    error: 'wrong email or password'
+                return res.status(403).render('bad_login',{
+                    message: 'wrong email or password',
+                    data: ''
                 })
             }
 
@@ -48,8 +49,9 @@ const auth = {
 
             //respond with error if password does not match
             if(!match){
-                return res.status(403).json({
-                    error: 'wrong email or password'
+                return res.status(403).render('bad_login',{
+                    message: 'wrong email or password',
+                    data: ''
                 })
             }
 
@@ -95,8 +97,9 @@ const auth = {
         console.log(authHead)
         //return error if token does not exist or invalid format
         if(!authHead){
-            return res.status(403).json({
-                error: "No auth."
+            return res.status(403).render('bad_login',{
+                message: 'wrong email or password',
+                data: ''
             }) 
         }
 
@@ -110,9 +113,10 @@ const auth = {
             next()
         }
         catch(err){
-            res.status(401).json({
-                error: "Unauthorised. Pls login"
-            })
+            res.status(401).render('bad_login',{
+                message: 'Unauthorised',
+                data: ''
+            }) 
         }
     },
     endorsed: async (req:Request, res:Response, next: NextFunction)=>{
@@ -125,8 +129,9 @@ const auth = {
 
         //return error if token does not exist or invalid format
         if(!authHead){
-            return res.status(403).json({
-                error: "No auth."
+            return res.status(403).render('bad_login',{
+                message: 'wrong email or password',
+                data: ''
             }) 
         }
 
@@ -144,17 +149,18 @@ const auth = {
             }
 
             //respond with message if not endorsed
-            res.status(401).json({
-                error: 'You are not endorsed',
-                message: 'Only admins can endorse users'
+            res.status(403).render('not_endorsed',{
+                message: 'You are not endorsed',
+                data: 'Only admins can endorse users'
             })
             
             
         }
         catch(err){
-            res.status(401).json({
-                error: "Unauthorised. Pls login"
-            })
+            res.status(401).render('bad_login',{
+                message: 'Session lost. Please login',
+                data: ''
+            }) 
         }
         
     },
@@ -169,9 +175,10 @@ const auth = {
         console.log(authHead)
         //return error if token does not exist or invalid format
         if(!authHead){
-            return res.status(403).json({
-                error: "No auth."
-            }) 
+            return res.status(403).render('bad_login',{
+                message: 'Session lost. Please login',
+                data: ''
+            })  
         }
 
         //split to obtain token
@@ -190,18 +197,19 @@ const auth = {
 
             
             //respond with error if not admin
-            res.status(403).json({
-                error: 'Forbidden',
-                message: 'Only admins can perform this action'
+            res.status(403).render('bad_login',{
+                message: 'Forbidden',
+                data: 'Only admins can perform this action'
             })
             
             
         }
         catch(err){
             console.error(err)
-            res.status(401).json({
-                error: "Unauthorised. Pls login"
-            })
+            res.status(401).render('bad_login',{
+                message: 'Session lost. Please login',
+                data: ''
+            }) 
         }
     }
 }
